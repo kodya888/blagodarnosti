@@ -1,0 +1,139 @@
+/* ——— Минимализм: белый фон, чёрный текст ——— */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #8a8a8a;
+  --line: #e8e8e8;
+  --danger: #c0392b;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body { max-width: 560px; margin: 0 auto; min-height: 100dvh; }
+
+button { font: inherit; cursor: pointer; background: none; border: none; color: inherit; }
+
+/* ——— Вход ——— */
+.auth-box {
+  display: flex; flex-direction: column; gap: 14px;
+  padding: 3rem 1.5rem;
+  max-width: 380px; margin: 15vh auto 0;
+}
+.auth-box h1 { font-size: 1.7rem; font-weight: 700; letter-spacing: -0.02em; }
+.subtitle { color: var(--muted); }
+#auth-form { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+
+input, textarea {
+  font: inherit; color: var(--text);
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 14px; background: var(--bg);
+  outline: none; transition: border-color .15s;
+}
+input:focus, textarea:focus { border-color: var(--text); }
+input::placeholder, textarea::placeholder { color: #b5b5b5; }
+
+.btn {
+  border-radius: 10px; padding: 12px 20px; font-weight: 600;
+  transition: opacity .15s, transform .05s;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--text); color: var(--bg); }
+.btn-primary:disabled { opacity: .4; cursor: default; }
+
+.error { color: var(--danger); font-size: .9rem; }
+.hint { color: var(--muted); font-size: .8rem; }
+
+/* ——— Основные экраны ——— */
+.screen { padding-bottom: calc(72px + var(--safe-bottom)); }
+.page { padding: 0 1.25rem; }
+
+.page-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 1.5rem 0 1rem;
+}
+.page-header h2 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; }
+
+/* Экран записи */
+.entry-card {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--line); border-radius: 14px;
+}
+.entry-card:focus-within { border-color: var(--text); }
+.entry-card textarea {
+  border: none; border-radius: 14px 14px 0 0;
+  padding: 16px; min-height: 180px; resize: vertical;
+}
+.entry-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-top: 1px solid var(--line);
+}
+.counter { color: var(--muted); font-size: .8rem; }
+
+.toast {
+  margin-top: 14px; text-align: center;
+  color: var(--text); background: #f4f4f4;
+  border-radius: 10px; padding: 10px;
+  animation: fade-in .2s;
+}
+
+/* Экран списка */
+.entries-list { display: flex; flex-direction: column; }
+
+.entry {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+.entry:last-child { border-bottom: none; }
+.entry-date { font-size: .78rem; color: var(--muted); margin-bottom: 6px; }
+.entry-text { white-space: pre-wrap; word-break: break-word; }
+.entry-delete {
+  position: absolute; top: 14px; right: 0;
+  color: #c8c8c8; font-size: 1.1rem; line-height: 1;
+  padding: 6px;
+}
+.entry-delete:active { color: var(--danger); }
+@media (hover: hover) {
+  .entry-delete { opacity: 0; transition: opacity .15s; }
+  .entry:hover .entry-delete { opacity: 1; }
+}
+
+.empty {
+  text-align: center; color: var(--muted);
+  padding: 3rem 1rem;
+}
+
+/* ——— Нижняя навигация ——— */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 560px;
+  display: flex;
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--line);
+  padding-bottom: var(--safe-bottom);
+  z-index: 10;
+}
+.nav-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  gap: 3px; padding: 10px 0 8px;
+  color: var(--muted); font-size: .72rem;
+  transition: color .15s;
+}
+.nav-btn svg { width: 22px; height: 22px; }
+.nav-btn.active { color: var(--text); }
+
+@keyframes fade-in { from { opacity: 0; transform: translateY(-4px); } }
+
+/* Приложение-стиль: без выделения и зума при тапах */
+* { -webkit-tap-highlight-color: transparent; }
