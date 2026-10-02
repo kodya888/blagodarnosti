@@ -44,12 +44,14 @@
         </div>
       </div>
       <p id="entry-toast" class="toast" hidden>Сохранено ✓</p>
+      <p id="sync-badge" class="sync-badge" hidden></p>
     </section>
 
     <!-- Экран 2: список записей -->
     <section id="list-screen" class="page" hidden>
       <header class="page-header">
         <h2>Записи</h2>
+        <button id="export-btn" class="export-btn" aria-label="Экспорт в файл">Экспорт</button>
         <span id="entries-count" class="counter"></span>
       </header>
       <input type="search" id="search-input" placeholder="Поиск по слову…" autocomplete="off">

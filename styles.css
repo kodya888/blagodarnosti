@@ -86,7 +86,20 @@ input::placeholder, textarea::placeholder { color: #b5b5b5; }
   animation: fade-in .2s;
 }
 
+/* Строка статуса под полем записи: офлайн / синхронизация */
+.sync-badge {
+  margin-top: 10px; text-align: center;
+  color: var(--muted); font-size: .78rem;
+}
+
 /* Экран списка */
+#export-btn {
+  color: var(--muted); font-size: .8rem;
+  padding: 4px 10px; border: 1px solid var(--line); border-radius: 8px;
+  transition: color .15s, border-color .15s;
+}
+#export-btn:active { color: var(--text); border-color: var(--text); }
+
 #search-input { margin-bottom: 4px; }
 .entries-list { display: flex; flex-direction: column; }
 
@@ -96,6 +109,7 @@ input::placeholder, textarea::placeholder { color: #b5b5b5; }
 }
 .entry:last-child { border-bottom: none; }
 .entry-date { font-size: .78rem; color: var(--muted); margin-bottom: 6px; }
+.entry-unsynced { color: var(--muted); font-style: italic; }
 .entry-text { white-space: pre-wrap; word-break: break-word; }
 
 .empty {

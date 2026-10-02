@@ -1,7 +1,7 @@
 // Service Worker: офлайн-кэш оболочки приложения
 // Стратегия «сначала кэш»: приложение открывается мгновенно даже при плохой
 // связи, свежие версии файлов докачиваются в фоне.
-const CACHE = "blagodarnosti-v2";
+const CACHE = "blagodarnosti-v3";
 const SHELL = [
   "./",
   "./index.html",
