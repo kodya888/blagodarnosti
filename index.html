@@ -52,6 +52,7 @@
         <h2>Записи</h2>
         <span id="entries-count" class="counter"></span>
       </header>
+      <input type="search" id="search-input" placeholder="Поиск по слову…" autocomplete="off">
       <div id="entries-list" class="entries-list"></div>
       <p id="list-empty" class="empty" hidden>Пока нет записей.<br>Первая — самая близкая ✍️</p>
       <p id="list-error" class="error" hidden></p>
@@ -71,7 +72,7 @@
   </main>
 
   <script src="config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="vendor/supabase.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

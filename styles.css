@@ -87,30 +87,21 @@ input::placeholder, textarea::placeholder { color: #b5b5b5; }
 }
 
 /* Экран списка */
+#search-input { margin-bottom: 4px; }
 .entries-list { display: flex; flex-direction: column; }
 
 .entry {
   padding: 18px 0;
   border-bottom: 1px solid var(--line);
-  position: relative;
 }
 .entry:last-child { border-bottom: none; }
 .entry-date { font-size: .78rem; color: var(--muted); margin-bottom: 6px; }
 .entry-text { white-space: pre-wrap; word-break: break-word; }
-.entry-delete {
-  position: absolute; top: 14px; right: 0;
-  color: #c8c8c8; font-size: 1.1rem; line-height: 1;
-  padding: 6px;
-}
-.entry-delete:active { color: var(--danger); }
-@media (hover: hover) {
-  .entry-delete { opacity: 0; transition: opacity .15s; }
-  .entry:hover .entry-delete { opacity: 1; }
-}
 
 .empty {
   text-align: center; color: var(--muted);
   padding: 3rem 1rem;
+  white-space: pre-line;
 }
 
 /* ——— Нижняя навигация ——— */

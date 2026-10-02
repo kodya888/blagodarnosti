@@ -1,11 +1,14 @@
 // Service Worker: офлайн-кэш оболочки приложения
-const CACHE = "blagodarnosti-v1";
+// Стратегия «сначала кэш»: приложение открывается мгновенно даже при плохой
+// связи, свежие версии файлов докачиваются в фоне.
+const CACHE = "blagodarnosti-v2";
 const SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./config.js",
+  "./vendor/supabase.js",
   "./manifest.webmanifest",
   "./icons/icon.svg",
 ];
@@ -24,16 +27,34 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
-// Network-first: если есть сеть — берём свежее; офлайн — из кэша
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET" || !e.request.url.startsWith("http")) return;
+
+  // Данные (записи) с сервера Supabase — только через сеть, без кэша:
+  // устаревший список хуже ошибки загрузки.
+  if (e.request.url.includes(".supabase.")) return;
+
   e.respondWith(
-    fetch(e.request)
-      .then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((c) => c.put(e.request, copy));
-        return res;
-      })
-      .catch(() => caches.match(e.request, { ignoreSearch: true }))
+    (async () => {
+      const cached = await caches.match(e.request, { ignoreSearch: true });
+
+      const fetchAndCache = fetch(e.request)
+        .then((res) => {
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(e.request, copy));
+          }
+          return res;
+        })
+        .catch(() => null);
+
+      // Есть в кэше — отдаём сразу, свежую версию докачиваем в фоне
+      if (cached) {
+        e.waitUntil(fetchAndCache);
+        return cached;
+      }
+      // Нет в кэше — ждём сеть; совсем без сети — пустой ответ
+      return (await fetchAndCache) || new Response("", { status: 503 });
+    })()
   );
 });

@@ -23,6 +23,9 @@ const entriesList  = document.getElementById("entries-list");
 const entriesCount = document.getElementById("entries-count");
 const listEmpty    = document.getElementById("list-empty");
 const listError    = document.getElementById("list-error");
+const searchInput  = document.getElementById("search-input");
+
+let allEntries = []; // последняя загруженная порция записей (для поиска)
 
 const navBtns = document.querySelectorAll(".nav-btn");
 
@@ -98,8 +101,10 @@ authForm.addEventListener("submit", async (e) => {
 
 async function afterAuth() {
   authPass.value = "";
-  const { data } = await db.auth.getUser();
-  currentUserId = data.user ? data.user.id : null;
+  // Сессия хранится локально в телефоне — сервер для этого не нужен,
+  // поэтому приложение открывается даже при плохой связи
+  const { data } = await db.auth.getSession();
+  currentUserId = data.session ? data.session.user.id : null;
   authScreen.hidden = true;
   appScreen.hidden = false;
   showPage("entry-screen");
@@ -161,10 +166,26 @@ async function loadEntries() {
     return;
   }
 
-  entriesCount.textContent = data.length ? String(data.length) : "";
-  listEmpty.hidden = data.length > 0;
-  entriesList.replaceChildren(...data.map(renderEntry));
+  allEntries = data;
+  renderList();
 }
+
+// Показываем записи с учётом строки поиска
+function renderList() {
+  const query = searchInput.value.trim().toLowerCase();
+  const shown = query
+    ? allEntries.filter(r => r.content.toLowerCase().includes(query))
+    : allEntries;
+
+  entriesCount.textContent = allEntries.length ? String(allEntries.length) : "";
+  listEmpty.hidden = shown.length > 0;
+  listEmpty.textContent = query && allEntries.length
+    ? "Ничего не найдено по этому слову."
+    : "Пока нет записей.\nПервая — самая близкая ✍️";
+  entriesList.replaceChildren(...shown.map(renderEntry));
+}
+
+searchInput.addEventListener("input", renderList);
 
 function renderEntry(row) {
   const el = document.createElement("article");
@@ -178,21 +199,8 @@ function renderEntry(row) {
   text.className = "entry-text";
   text.textContent = row.content;
 
-  const del = document.createElement("button");
-  del.className = "entry-delete";
-  del.textContent = "✕";
-  del.setAttribute("aria-label", "Удалить запись");
-  del.addEventListener("click", () => {
-    if (confirm("Удалить эту запись?")) deleteEntry(row.id);
-  });
-
-  el.append(date, text, del);
+  el.append(date, text);
   return el;
-}
-
-async function deleteEntry(id) {
-  await db.from("entries").delete().eq("id", id);
-  loadEntries();
 }
 
 // ——— Старт ———
