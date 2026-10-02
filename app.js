@@ -377,8 +377,13 @@ function renderEntry(row) {
 }
 
 // ——— Экспорт всех записей в файл ———
-exportBtn.addEventListener("click", () => {
-  if (!allEntries.length) { listEmpty.hidden = false; return; }
+exportBtn.addEventListener("click", async () => {
+  if (!allEntries.length) {
+    listEmpty.textContent = "Нет записей, чтобы экспортировать.";
+    listEmpty.hidden = false;
+    searchInput.focus();
+    return;
+  }
   const lines = ["# Благодарности", ""];
   for (const r of allEntries) {
     lines.push(
@@ -391,12 +396,33 @@ exportBtn.addEventListener("click", () => {
       ""
     );
   }
+  const name = "blagodarnosti_" + new Date().toISOString().slice(0, 10) + ".md";
+
+  // Телефон: системное окно «Поделиться» — оттуда файл можно сохранить
+  // в файлы, отправить себе и т.д. Самый надёжный путь из PWA.
+  try {
+    const file = new File(
+      [new Blob([lines.join("\n")], { type: "text/markdown" })],
+      name, { type: "text/markdown" }
+    );
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: "Благодарности" });
+      return;
+    }
+  } catch (e) {
+    // Пользователь закрыл окно «Поделиться» — на этом всё, не ошибка
+    if (e && e.name === "AbortError") return;
+  }
+
+  // Запасной путь: обычное скачивание (компьютер и старые браузеры)
   const blob = new Blob([lines.join("\n")], { type: "text/markdown" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "blagodarnosti_" + new Date().toISOString().slice(0, 10) + ".md";
+  a.download = name;
+  document.body.appendChild(a);
   a.click();
+  a.remove();
   URL.revokeObjectURL(url);
 });
 
