@@ -1,8 +1,0 @@
-- generic [ref=f1e3]:
-  - heading "Благодарности" [level=1] [ref=f1e4]
-  - paragraph [ref=f1e5]: Дневник благодарности и хороших моментов
-  - generic [ref=f1e6]:
-    - textbox "E-mail" [ref=f1e7]
-    - textbox "Пароль" [ref=f1e8]
-    - button "Войти" [ref=f1e9] [cursor=pointer]
-  - paragraph [ref=f1e10]: Вход только для владельца. Аккаунт создаётся один раз при первом входе.
